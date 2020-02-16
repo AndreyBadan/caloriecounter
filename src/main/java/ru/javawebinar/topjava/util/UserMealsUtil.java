@@ -37,6 +37,7 @@ public class UserMealsUtil {
             map.merge(ld, calories, Integer::sum);
         });
 
+        meals.sort(Comparator.comparing(UserMeal::getDateTime));
         List<UserMealWithExcess> mealWithExcesses = new ArrayList<>();
         meals.forEach(meal -> {
             LocalTime lt = meal.getDateTime().toLocalTime();
@@ -54,6 +55,7 @@ public class UserMealsUtil {
 
         List<UserMealWithExcess> list = new ArrayList<>();
         meals.stream()
+                .sorted(Comparator.comparing(UserMeal::getDateTime))
                 .filter(meal -> TimeUtil.isBetweenInclusive(meal.getDateTime().toLocalTime(), startTime, endTime))
                 .forEach(meal -> list.add(new UserMealWithExcess(meal.getDateTime(), meal.getDescription(), meal.getCalories(), map.get(meal.getDate()) > caloriesPerDay)));
         return list;
